@@ -2,6 +2,8 @@
 
 Exploring the capability of neural networks to learn symmetric and asymmetric encryption schemes. Train and experiment with the symmetric model [here](https://colab.research.google.com/github/mwpryer/nn-cryptography/blob/main/symmetric.ipynb), or the asymmetric model [here](https://colab.research.google.com/github/mwpryer/nn-cryptography/blob/main/asymmetric.ipynb).
 
+**NEW**: Now with [Differential Privacy](#differential-privacy) support to protect training data privacy!
+
 ## Overview
 
 In 2016, Abadi and Anderson introduced a novel approach for learning encryption schemes using neural networks, termed Adversarial Neural Cryptography [[1]](https://arxiv.org/pdf/1610.06918.pdf).
@@ -116,6 +118,59 @@ And as before, we evaluate the system with a new dataset to determine the final 
 </div>
 
 The performance of the asymmetric model is notably worse than that of the symmetric model, with Eve recovering a majority of the plaintext message. This is likely due to the increased complexity of the asymmetric model, where the key generator neural network introduces additional noise into the system. Despite this, it still demonstrates the capability of neural networks to learn some form of weak security over communication channels.
+
+## Differential Privacy
+
+**New Feature**: This repository now includes differential privacy (DP) support to protect the privacy of training data!
+
+Differential privacy provides mathematical guarantees that individual training examples cannot be identified or reconstructed from the trained model. This is crucial when training on sensitive data.
+
+### Features
+
+- **DP-SGD Implementation**: Differentially Private Stochastic Gradient Descent with gradient clipping and noise addition
+- **Privacy Budget Tracking**: Monitor epsilon (ε) and delta (δ) throughout training
+- **Privacy Presets**: Choose from high, medium, or low privacy levels
+- **Privacy-Utility Tradeoff**: Balance between privacy guarantees and model accuracy
+
+### Quick Start
+
+Use the new notebooks with differential privacy:
+
+- `symmetric_dp.ipynb`: Symmetric model with DP support
+- `asymmetric_dp.ipynb`: Asymmetric model with DP support (coming soon)
+
+```python
+# Enable differential privacy with medium privacy preset
+enable_dp = True
+privacy_preset = "medium"  # Options: "high", "medium", "low"
+
+# Train with privacy guarantees
+# Privacy spent will be tracked and displayed
+```
+
+### Privacy Levels
+
+| Preset | Target ε | Description |
+|--------|----------|-------------|
+| High   | ≤ 1.0    | Strong privacy, may reduce accuracy |
+| Medium | ≤ 3.0    | Balanced privacy and utility |
+| Low    | ≤ 8.0    | Weaker privacy, better accuracy |
+
+For detailed information about differential privacy implementation, privacy parameters, and best practices, see [DIFFERENTIAL_PRIVACY.md](DIFFERENTIAL_PRIVACY.md).
+
+### Example Output
+
+```
+Training with differential privacy (medium preset)...
+Privacy spent: epsilon = 2.85, delta = 1.00e-05
+✓ Privacy budget satisfied!
+
+Plaintext: Hello, World!
+Ciphertext: ?÷Qgsã?ÿì»`:
+Plaintext (Bob): Hello, World!
+Plaintext (Eve): !á8)ªhØCuî¸Q
+[Differential Privacy: epsilon=2.85, delta=1.00e-05]
+```
 
 ## References
 
